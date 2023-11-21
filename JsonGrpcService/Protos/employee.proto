@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+option csharp_namespace = "JsonGrpcService";
+
+import "google/api/annotations.proto";
+
+package employee;
+
+service EmployeeDetail{
+
+//Create
+rpc CreateEmployee (CreateEmployeeRequest) returns (CreateEmployeeResponse){
+	option (google.api.http) = {
+      post: "/v1/createEmployee",
+	  body: "*"
+    };
+}
+
+//Get
+rpc GetEmployee (GetRequest) returns (GetResponse){
+	option (google.api.http) = {
+      get: "/v1/getemployee/{Id}"
+    };
+}
+
+//Get All
+rpc GetAllEmployees (GetAllRequest) returns (GetAllResponse){
+	option (google.api.http) = {
+      get: "/v1/getallemployee"
+    };
+}
+
+//Update
+rpc UpdateEmployee (UpdateRequest) returns (UpdateResponse){
+	option (google.api.http) = {
+      put: "/v1/updateEmployee",
+	  body: "*"
+    };
+}
+
+//Delete
+rpc DeleteEmployee (DeleteRequest) returns (DeleteResponse){
+	option (google.api.http) = {
+      delete: "/v1/deleteEmployee/{Id}"
+    };
+}
+
+}
+
+message CreateEmployeeRequest{
+	string Name = 1;
+	int32 Age = 2;
+	string Address = 3;
+}
+message CreateEmployeeResponse{
+	string Id = 1;
+}
+
+message GetRequest{
+	string Id = 1;
+}
+
+message GetResponse{
+	string Id = 1;
+	string Name = 2;
+	int32 Age = 3;
+	string Address = 4;
+}
+
+message GetAllRequest{}
+
+message GetAllResponse{
+	repeated  GetResponse employees = 1;
+}
+
+message UpdateRequest{
+	string Id = 1;
+	string Name = 2;
+	int32 Age = 3;
+	string Address = 4;
+}
+ message UpdateResponse{
+	 string Id = 1;
+ }
+
+ message DeleteRequest{
+	 string Id =1;
+ }
+ message DeleteResponse{
+	string Id =1;
+ }
