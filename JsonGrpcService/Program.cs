@@ -5,12 +5,19 @@ using JsonGrpcService.Interface;
 using JsonGrpcService.Models;
 using JsonGrpcService.Services;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddGrpc().AddJsonTranscoding();
 
 builder.Services.AddSingleton<IEmployeeService, EmployeeService>();
+builder.Services.AddGrpcSwagger();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1",
+        new OpenApiInfo { Title = "gRPC transcoding", Version = "v1" });
+});
 
 var configs = KeyVaultConfigsService.GetConfigs(builder.Configuration);
 if (!string.IsNullOrWhiteSpace(configs.keyVaultUri))
@@ -29,6 +36,13 @@ if (!string.IsNullOrWhiteSpace(configs.keyVaultUri))
 
 
 var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+});
+
 
 // Configure the HTTP request pipeline.
 app.MapGrpcService<EmployeeDetailService>();
